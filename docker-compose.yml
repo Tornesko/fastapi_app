@@ -1,0 +1,32 @@
+version: '3.8'
+services:
+  db:
+    image: postgres:13
+    environment:
+      POSTGRES_USER: 'fastapi'
+      POSTGRES_PASSWORD: 'fastapi'
+      POSTGRES_DB: 'fastapi'
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - fastapi_app
+
+  web:
+    build: .
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+    env_file:
+      - .env.local
+    networks:
+      - fastapi_app
+
+networks:
+  fastapi_app:
+    driver: bridge
+
+volumes:
+  postgres_data:
